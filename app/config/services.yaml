@@ -7,6 +7,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    picture.max_size: '%env(int:PICTURE_MAX_SIZE)%'
+    picture.allowed_mimes: '%env(csv:PICTURE_ALLOWED_MIMES)%'
+    picture.allowed_extensions: '%env(csv:PICTURE_ALLOWED_EXTENSIONS)%'
+    jwt.secret_key: '%env(string:JWT_SECRET_KEY)%'
+    jwt.token_life_time: '%env(int:TOKEN_LIFE_TIME)%'
 
 services:
     # default configuration for services in *this* file
@@ -18,6 +23,17 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+
+    App\Service\PictureService:
+        arguments:
+            $pictureMaxSize: '%picture.max_size%'
+            $pictureAllowedMimes: '%picture.allowed_mimes%'
+            $pictureAllowedExtensions: '%picture.allowed_extensions%'
+
+    App\Service\JWTService:
+        arguments:
+            $secretKey: '%jwt.secret_key%'
+            $tokenLifeTime: '%jwt.token_life_time%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
